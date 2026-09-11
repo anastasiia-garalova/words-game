@@ -9,10 +9,10 @@ const connection = mysql.createConnection({
     database: "playwords_db"
 })
 
-connection.connect( err => {
-    if (err) {
-        console.log(err);
-        return err;
+connection.connect( error => {
+    if (error) {
+        console.log(error);
+        return "Didn't connect";
     }
     else {
         console.log("Connected!)");

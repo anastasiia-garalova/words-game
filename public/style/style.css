@@ -1,0 +1,668 @@
+body {
+    background: radial-gradient(circle at top, #0f2027, #000);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+#userName {
+    position: fixed;       /* фиксированное позиционирование относительно окна */
+    top: 20px;             /* отступ сверху */
+    left: 20px;            /* отступ слева */
+    z-index: 1300;         /* выше модальных окон с z-index:1200 */
+    font-family: 'Arial', sans-serif;
+    font-size: 1.5rem;     /* можно подстроить размер */
+    color: #a0f0ff;        /* мягкий голубой */
+
+}
+.modal1 {
+    display: flex;
+    gap: 40px;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
+}
+
+.form-content {
+    width: 280px;
+    padding: 30px;
+    border-radius: 16px;
+    background: rgba(10, 10, 20, 0.85);
+    box-shadow:
+            0 0 20px rgba(0, 255, 255, 0.4),
+            inset 0 0 10px rgba(0, 255, 255, 0.15);
+    animation: glow 3s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow:
+                0 0 15px rgba(0, 255, 255, 0.4),
+                inset 0 0 10px rgba(0, 255, 255, 0.2);
+    }
+    to {
+        box-shadow:
+                /*0 0 30px rgba(0, 255, 255, 0.8),
+                inset*/ 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+}
+
+h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: rgba(76, 178, 178, 1);
+    /*text-shadow:
+            0 0 5px #00ffff,
+            0 0 15px #00ffff;*/
+}
+
+input {
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+    font-size: 14px;
+    outline: none;
+    box-shadow: inset 0 0 8px rgba(0, 255, 255, 0.3);
+}
+
+input::placeholder {
+    color: rgba(54, 115, 115, 1);
+}
+
+input:focus {
+    border-color: #00ffff;
+    box-shadow:
+            0 0 10px #00ffff,
+            inset 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #00ffff, #00b3b3);
+    color: rgba(15, 39, 39, 1);
+    font-weight: bold;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /*box-shadow:
+            0 0 15px rgba(0, 255, 255, 0.8);*/
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow:
+            0 0 10px rgba(0, 255, 255, 1);
+}
+
+/* ===== CALM FULLSCREEN MODAL ===== */
+.modal, .task-container {
+    position: fixed;
+    inset: 0;
+    background:
+            radial-gradient(circle at 30% 20%, #1f2436, transparent 60%),
+            radial-gradient(circle at 80% 70%, #12182a, transparent 60%),
+            linear-gradient(135deg, #0b0f1c, #070a14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+/* ===== CALM GLASS CARD ===== */
+.task-content {
+    position: relative;
+    padding: 34px 38px;
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    text-align: center;
+
+
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+            0 18px 45px rgba(0, 0, 0, 0.65),
+            inset 0 0 20px rgba(255, 255, 255, 0.04);
+
+    animation: modalFade 0.3s ease;
+}
+
+/* SOFT FRAME */
+.task-content::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.25),
+            rgba(255, 255, 255, 0.05)
+    );
+    opacity: 0.35;
+    filter: blur(14px);
+    z-index: -1;
+}
+
+/* ===== TITLE ===== */
+.task-content h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: #e9ecf1;
+    margin-bottom: 6px;
+}
+
+/* ===== BUTTON BASE (CALM) ===== */
+.task-content button {
+    padding: 15px 22px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f3f7;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+
+    box-shadow:
+            0 8px 22px rgba(0, 0, 0, 0.55),
+            inset 0 0 16px rgba(255, 255, 255, 0.04);
+
+    transition:
+            transform 0.12s ease,
+            box-shadow 0.12s ease,
+            background 0.12s ease;
+}
+
+/* SOFT HOVER */
+.task-content button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* ===== ACCENT COLORS (NOT GLOWING) ===== */
+.task-content button:nth-of-type(1) {
+    border-color: rgba(124, 255, 122, 0.45);
+}
+
+.task-content button:nth-of-type(2) {
+    border-color: rgba(110, 198, 255, 0.45);
+}
+
+.task-content button:nth-of-type(3) {
+    border-color: rgba(255, 194, 102, 0.45);
+}
+
+/* PRESS */
+.task-content button:active {
+    transform: scale(0.97);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ===== GAME END OVERLAY ===== */
+.game-end-overlay {
+    position: fixed;
+    inset: 0;
+    background:
+            radial-gradient(circle at 30% 20%, #1f2436, transparent 60%),
+            radial-gradient(circle at 80% 70%, #12182a, transparent 60%),
+            linear-gradient(135deg, #0b0f1c, #070a14);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    z-index: 1300;
+}
+
+/* ===== GLASS MESSAGE CARD ===== */
+.game-end-message {
+    padding: 28px 36px;
+    min-width: 280px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #e9ecf1;
+
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    border-radius: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    box-shadow:
+            0 18px 45px rgba(0, 0, 0, 0.65),
+            inset 0 0 20px rgba(255, 255, 255, 0.04);
+
+    animation: fadeInScale 0.3s ease;
+}
+
+/* ===== BUTTON BASE ===== */
+.game-end-overlay button {
+    min-width: 200px;
+    padding: 14px 22px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+
+    background: rgba(255, 255, 255, 0.1);
+    color: #f1f3f7;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+
+    box-shadow:
+            0 8px 22px rgba(0, 0, 0, 0.55),
+            inset 0 0 16px rgba(255, 255, 255, 0.04);
+
+    transition:
+            transform 0.12s ease,
+            box-shadow 0.12s ease,
+            background 0.12s ease;
+}
+
+/* HOVER */
+.game-end-overlay button:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* ===== OK (PRIMARY) ===== */
+.game-end-overlay button:first-of-type {
+    border-color: rgba(124, 255, 122, 0.45);
+}
+
+/* ===== MENU (SECONDARY) ===== */
+.game-end-overlay button:last-of-type {
+    border-color: rgba(110, 198, 255, 0.45);
+}
+
+/* PRESS */
+.game-end-overlay button:active {
+    transform: scale(0.97);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+/* ===== BASE MESSAGE (LIGHT BG) ===== */
+.game-end-message {
+    background: #ffffff;
+    color: #1f2937; /* тёмно-серый, а не чёрный */
+    border-radius: 20px;
+    padding: 28px 36px;
+    font-size: 24px;
+    font-weight: 700;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== WIN STATE (HIGH CONTRAST) ===== */
+.game-end-overlay.win .game-end-message {
+    background: linear-gradient(
+            135deg,
+            #ecfdf5,
+            #d1fae5
+    ); /* очень светло-зелёный фон */
+
+    color: #065f46; /* тёмно-зелёный текст */
+
+    border-color: #34d399;
+
+    box-shadow:
+            0 10px 25px rgba(16, 185, 129, 0.35),
+            inset 0 0 0 2px rgba(52, 211, 153, 0.25);
+}
+
+/* ===== OPTIONAL ICON BOOST ===== */
+.game-end-overlay.win .game-end-message::before {
+    content: "✔";
+    display: block;
+    font-size: 36px;
+    margin-bottom: 8px;
+    color: #10b981;
+}
+
+/* ===== .form-link ===== */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-link {
+    align-self: flex-end;
+
+
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: 20px;
+
+
+    color: rgba(0, 255, 255, 0.6);
+    font-size: 14px;
+    cursor: pointer;
+
+    text-decoration: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    outline: none;
+
+    text-transform: capitalize;
+    font-weight: normal;
+}
+
+.form-link:hover {
+    color: rgba(242, 253, 253, 1);
+    /*text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);*/
+}
+
+/* убрать синюю/белую рамку при клике */
+.form-link:hover,
+.form-link:focus,
+.form-link:focus-visible,
+.form-link:active {
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.form-error {
+    margin-top: 12px;
+    padding: 0 12px;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    color: rgba(251, 98, 101, 1);
+
+    text-align: center;
+
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: all 0.25s ease;
+}
+
+.form-error.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   GAME HEADER
+========================================= */
+
+.game-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 70px;
+
+    box-sizing: border-box;
+
+    z-index: 1500;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   USER NAME — CENTER
+========================================= */
+
+.game-header #userName {
+    position: fixed;
+
+    top: 20px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    margin: 0;
+
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+
+    color: #a0f0ff;
+
+    text-shadow:
+        0 0 8px rgba(0, 255, 255, 0.25);
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   MENU FORM — LEFT
+========================================= */
+
+.game-header #menu-button {
+
+}
+
+/* =========================================
+   MENU BUTTON
+========================================= */
+
+.game-header #menu-button {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: rgba(220, 240, 240, 0.75);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+
+    text-transform: none;
+    letter-spacing: 0;
+
+    cursor: pointer;
+
+        position: fixed;
+
+    top: 18px;
+    left: 18px;
+
+    width: auto;
+
+    margin: 0;
+    padding: 0;
+
+    pointer-events: auto;
+    
+    display: none;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.18);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+        
+}
+
+
+/* =========================================
+   LOGOUT FORM — RIGHT
+========================================= */
+
+.game-header .logout-form {
+    position: fixed;
+
+    top: 18px;
+    right: 18px;
+
+    width: auto;
+
+    margin: 0;
+    padding: 0;
+
+    pointer-events: auto;
+}
+
+
+/* =========================================
+   LOGOUT BUTTON
+========================================= */
+
+.game-header .logout-button {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: rgba(220, 240, 240, 0.75);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+
+    text-transform: none;
+    letter-spacing: 0;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.18);
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
+
+.game-header .game-button:hover,
+.game-header .logout-button:hover {
+
+    background: rgba(255, 255, 255, 0.08);
+
+    border-color: rgba(160, 240, 255, 0.25);
+
+    color: #dffaff;
+
+    transform: scale(1.04);
+}
+
+
+/* =========================================
+   ACTIVE
+========================================= */
+
+.game-header .game-button:active,
+.game-header .logout-button:active {
+
+    transform: scale(0.94);
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .game-header .menu-form {
+        top: 13px;
+        left: 14px;
+    }
+
+    .game-header .logout-form {
+        top: 13px;
+        right: 14px;
+    }
+
+    .game-header .game-button,
+    .game-header .logout-button {
+
+        width: 32px;
+        height: 32px;
+
+        min-width: 32px;
+
+        font-size: 11px;
+    }
+
+    .game-header #userName {
+        top: 18px;
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,131 @@
+#tetris-table {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(10, 40px);
+    gap: 1px;
+
+    background: #0f172a;              /* тёмно-синий фон */
+    width: 454px;
+    height: auto;
+
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+
+    border-radius: 12px;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.2);
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+}
+
+
+.cell {
+    background: #1e293b;              /* сетка */
+}
+
+.block {
+    grid-column: 2;
+    grid-row: 28 / 31;
+
+    color: #0f172a;
+    text-align: center;
+    padding-top: 7px;
+
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    box-shadow:
+            inset 0 0 6px rgba(255,255,255,0.4),
+            0 0 10px rgba(0,0,0,0.4);
+
+    border-radius: 6px;
+
+}
+
+
+.block.removing {
+    opacity: 0;
+    transform: scale(0.3);
+}
+
+/* 🎨 Цвета тетрис-блоков */
+.yellow {
+    background: #facc15; /* неоновый жёлтый */
+}
+
+.orange {
+    background: #fb923c; /* мягкий оранжевый */
+}
+
+.green {
+    background: #4ade80; /* неоновый зелёный */
+}
+
+.pink {
+    background: #f472b6; /* неон-розовый */
+}
+
+.aqua {
+    background: #22d3ee; /* кибер-голубой */
+}
+
+/* 🃏 Карточки */
+.cards-container {
+    width: 150px;
+    height: 30px;
+
+    margin: 0;
+    padding: 10px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1px;
+
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+
+    color: #e5e7eb;
+    background: #020617;
+    border-radius: 10px;
+
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1px;
+}
+
+.card-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.game-end-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.game-end-message {
+    background: white;
+    padding: 30px 50px;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 14px;
+}

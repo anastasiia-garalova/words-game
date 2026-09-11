@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple past</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/tetris.css">
+    <link rel="stylesheet" href="style/game1.css">
+    <link rel="stylesheet" href="style/newWordsList.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+        <!-- Верхняя панель --> 
+         <header class="game-header" id="game-header"> 
+            <h1 id="userName"></h1> 
+            
+            <button type="button" id="menu-button" title="Menu">
+                ←
+            </button>
+            
+            <form class="logout-form" action="/logout" method="POST">
+                <button type="submit" class="logout-button" title="Logout">
+                    ×
+                </button>
+            </form>
+        </header>
+
+        <div class="main" ><div class="modal" ></div></div>
+
+    <script src="script/main.js" type="module"></script>
+
+</body>
+</html>
