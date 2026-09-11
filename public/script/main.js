@@ -65,7 +65,7 @@ function gameHandler(win) {
                 endScreen.win("tetris");    // Победа / Sieg
             else
                 endScreen.lose("tetris");   // Поражение / Niederlage
-        }).then();
+        });
     }
 
     else if (win === "speak") {

@@ -2,7 +2,9 @@
 
 class TaskDescription {
     constructor() {
+
         this._activeWindow = "";
+        this._onSelect = null;
         // FENSTER
         // Modal Fencter, in dem wrd ganze Aufgabe heigen
         this.taskContainer  = document.createElement("div");
@@ -23,9 +25,32 @@ class TaskDescription {
 
         // MODEL CONTAINER cards-container mit ID
         this.modalContainer = document.createElement("div");
+
+        // EVENT auf der Button "Game 1"
+        // Nur mit ()=> this bleibt von der Class
+       this.buttonPlayGame1.addEventListener("click", ()=> {
+            this.changeWindow("game1");
+            this._onSelect (this._activeWindow);
+        });
+
+        // EVENT auf der Button "Tetris"
+        this.buttonPlayTetris.addEventListener("click", ()=> {
+            console.log("🎯 TETRIS BUTTON CLICK");
+            this.changeWindow("tetris");
+            this._onSelect (this._activeWindow);
+        })
+
+        // EVENT auf der Button "Eigene Wörter lernen"
+        this.newWordsADD.addEventListener("click", ()=> {
+            this.changeWindow("newWordsADD");
+            this._onSelect (this._activeWindow);
+        })
     }
 
     showTaskDescription(onSelect) {
+        console.log("📋 SHOW TASK DESCRIPTION");
+        this._onSelect = onSelect;
+        
         // CLASSER NAMEN
         // von FENSTER
         this.taskContainer.className = "task-container";
@@ -49,26 +74,6 @@ class TaskDescription {
 
         // Setzen das Element "aufgabeModal" in "document body"
         document.body.appendChild(this.taskContainer);
-
-        // EVENT auf der Button "Game 1"
-        // Nur mit ()=> this bleibt von der Class
-        this.buttonPlayGame1.addEventListener("click", ()=> {
-            this.changeWindow("game1");
-            onSelect(this._activeWindow);
-        });
-
-        // EVENT auf der Button "Tetris"
-        this.buttonPlayTetris.addEventListener("click", ()=> {
-            this.changeWindow("tetris");
-            onSelect(this._activeWindow);
-        })
-
-        // EVENT auf der Button "Eigene Wörter lernen"
-        this.newWordsADD.addEventListener("click", ()=> {
-            this.changeWindow("newWordsADD");
-            onSelect(this._activeWindow);
-        })
-
     }
 
     changeWindow(newWindow) {

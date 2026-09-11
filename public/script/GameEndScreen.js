@@ -12,7 +12,7 @@ export class GameEndScreen {
         return this.show("Versuche es noch einmal", "lose", gameName);
     }
 
-    show(text, gameName, state = "") {
+    show(text, state = "", gameName) {
         let redirectTo = "";
         this.modalContainer.innerHTML = "";
 

@@ -48,6 +48,7 @@ class Tetris {
     // Jeder Block wird vor einander setzen
     // Каждый блок появляется один за другим
     async startTetris(onEnd) {
+        console.log("🎮 START TETRIS");
 
         let blocksTotalCount = this._rows * this._columns;
         let bgColorId = Math.floor(Math.random() * this._bgColorArray.length);
@@ -83,16 +84,29 @@ class Tetris {
 
             this._tetrisTable.appendChild(block);
 
+            console.log("⬇️ BEFORE MOVE", {
+                i,
+                color,
+                wordID
+            });
             // ждём пока блок упадёт
             const continueGame = await this.moveBlock(block, "down", color, wordID);
             if (!continueGame) {
+                console.log("💀 CALLING onEnd(lose)");
                 onEnd("lose");
                 return;
             }
+
+            console.log("⬆️ AFTER MOVE", {
+                i,
+                continueGame
+            });
         }
-        setInterval(()=>{},1000);
+
         if (!this.isGridEmpty()) {
+            console.log("💀 CALLING onEnd(lose)");
             onEnd("lose");
+            return;
         }
     }
 
@@ -244,20 +258,15 @@ class Tetris {
             let interval;
 
             const stop = async () => {
+                console.log("🛑 STOP", rowStart, col);
+
                 clearInterval(interval);
                 document.removeEventListener("keydown", keyHandler);
 
                 const continueGame = await this.checkup(color, wordID, rowStart, col);
-                resolve(continueGame);
+                console.log("🛑 CHECKUP RESULT:", continueGame);
 
-                if (!continueGame) {
-                    this._counter ++;
-                    if ( this._counter % 5 === 0 ) {
-                        this._timeout = Math.max(200, this._timeout - 100);
-                        console.log("this._timeout:" + this._timeout);
-                        startInterval(this._timeout);
-                    }
-                }
+                resolve(continueGame);
             };
 
             const startInterval = (speed) => {
@@ -342,7 +351,13 @@ class Tetris {
         const row = rowStart - 2;
         const colIndex = col - 1;
 
-        console.log("row: ", row)
+            console.log("🔎 CHECKUP", {
+                rowStart,
+                row,
+                col,
+                color,
+                wordID
+            });
         if (row === 1) {
             return false;
         } else {
