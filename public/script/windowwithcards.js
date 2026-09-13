@@ -5,10 +5,11 @@ let blinkInterval = {
     de: null
 };
 
-let cardsMap = new Cards().cards;
-const cards = Object.fromEntries(cardsMap);
-
 function showWindowWithCard(onEnd) {
+
+    let cardsMap = new Cards().cards;
+    const cards = Object.fromEntries(cardsMap);
+
     const modalContainer = document.getElementsByClassName("modal")[0];
     modalContainer.innerHTML = "";
         // ID NAME
@@ -168,8 +169,6 @@ function showWindowWithCard(onEnd) {
 
     }
 
-
-
     // Positionieren ohne Überschneidungen (без пересечения)
     function placeWithoutOverlap(element, container, usedAreas) {
         const containerRect = container.getBoundingClientRect();
@@ -207,20 +206,9 @@ function showWindowWithCard(onEnd) {
         element.style.left = left + "px";
         element.style.top = top + "px";
     }
-
-    //mainContainer.appendChild(modalContainer);
-    // DISABLED #cards-container
-    //modalContainer.style.display = "none";
-
-/*    clickMausDown(cardDiv, color, lang) {
-        cardDiv.addEventListener("mousedown", (event) => {
-        });
-
-    }*/
 }
 
-
-export {showWindowWithCard, blinkInterval, cards};
+export {showWindowWithCard, blinkInterval};
 
 
 

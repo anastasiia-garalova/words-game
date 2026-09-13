@@ -10,7 +10,7 @@ class CardManager {
 
         menuButton.addEventListener("click", () => {
             modalContainer.innerHTML = "";
-            showMenu(); // Вызываем функцию showMenu / Rufen Sie die Funktion showMenu auf
+            showMenu(); 
         });
 
         // Conteiner mit Karten
@@ -47,8 +47,6 @@ class CardManager {
             }, 500);
         }
     }
-
-
 }
 
 

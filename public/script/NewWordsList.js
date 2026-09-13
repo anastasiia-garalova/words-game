@@ -3,12 +3,13 @@ class NewWordsList {
 
         const modalContainer = document.getElementsByClassName("modal")[0];
         const menuButton = document.getElementById("menu-button");
+
         menuButton.style.display = "block"; 
-        console.log("Менеджер карточек запущен / Karten-Manager gestartet");
+        console.log("Karten-Manager gestartet");
 
         menuButton.addEventListener("click", () => {
             modalContainer.innerHTML = "";
-            showMenu(); // Вызываем функцию showMenu / Rufen Sie die Funktion showMenu auf
+            showMenu();
         });
 
         const stored = localStorage.getItem("listNewWords");
@@ -23,10 +24,7 @@ class NewWordsList {
         // ID für Element - tr: löschen, koregieren
         this.buttonID = 0;
 
-        //this.mainContainer = document.getElementsByClassName("main")[0];
-
         // Position Center -> .task-content
-        //this.workPanel = document.createElement("div");
         this.modalContainer = document.getElementsByClassName("modal")[0];
 
 
@@ -36,6 +34,7 @@ class NewWordsList {
         // Tabele
         this.tableContainer = document.createElement("table");
         this.tableADD = document.createElement("table");
+
         // ID
         this.tableContainer.id = "tableContainer";
         this.tableADD.id = "tableADD";
@@ -43,9 +42,6 @@ class NewWordsList {
         // Text Error
         this.errorP = document.createElement("p");
         this.errorP.style.color = "red";
-
-        /*this.createTableWithWords();
-        this.createTableWithBtnAdd();*/
     }
 
     // Tabele mit neuen Wörter
@@ -94,7 +90,7 @@ class NewWordsList {
         const td3TableADD = document.createElement("td");
         const td4TableADD = document.createElement("td");
 
-        //
+        
         const inputEn = document.createElement("input");
         const inputDe = document.createElement("input");
         const btnAdd = document.createElement("button");
@@ -294,26 +290,28 @@ class NewWordsList {
         // Wenn btnEdit gedruekt war
         newBtnSave.addEventListener("click", (event)=>{
 
-            // Aus/einschalten die ButtonbtnSaves
-            newBtnSave.style.display = "none";
-            btnAdd.style.display = "block";
-            btnPlay.style.display = "block"
-
             const newEn = listInputs[0].value.trim();
             const newDe = listInputs[1].value.trim();
 
             if(!newEn || !newDe) return;
 
-            // Speichern Aenderungen
-            editTr.children[0].textContent = listInputs[0].value;
-            editTr.children[1].textContent = listInputs[1].value;
-
-            this.listNewWords[listInputs[0].value] = this.listNewWords[enOldWord];
             delete this.listNewWords[enOldWord];
-            this.listNewWords[listInputs[0].value] = listInputs[1].value;
 
-            localStorage.setItem("listNewWords", JSON.stringify(this.listNewWords));
+            this.listNewWords[newEn] = newDe;
+
+            editTr.children[0].textContent = newEn;
+            editTr.children[1].textContent = newDe;
+
+            localStorage.setItem(
+                "listNewWords",
+                JSON.stringify(this.listNewWords)
+            );
             console.log(this.listNewWords);
+
+            // Aus/einschalten die ButtonbtnSaves
+            newBtnSave.style.display = "none";
+            btnAdd.style.display = "block";
+            btnPlay.style.display = "block"
 
             // Inputs reinigen
             listInputs[0].value = "";
@@ -331,15 +329,6 @@ class NewWordsList {
 
         return document.getElementById(trId);
     }
-
-/*    startGame() {
-        if (document.querySelector(".task-content") ){
-            document.querySelector(".task-content").remove();
-        }
-
-    }*/
-
-
 }
 
 export {NewWordsList};

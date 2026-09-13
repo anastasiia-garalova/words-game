@@ -1,21 +1,26 @@
 class Cards {
 
-     constructor() {
+    constructor() {
+        this.loadCards();
+    }
 
-         let cardsLocal = JSON.parse(localStorage.getItem("listNewWords"));
+    loadCards() {
+        const cardsLocal = JSON.parse(
+            localStorage.getItem("listNewWords")
+        );
 
-         if (cardsLocal) {
-             this._cards = new Map(Object.entries(cardsLocal));
-         } else {
-             this._cards = new Map([
-                 ["cat", "кот"],
-                 ["dog", "собака"],
-                 ["sun", "солнце"],
-                 ["ball", "мяч"],
-                 ["apple", "яблоко"]
-             ]);
-         }
-     }
+        if (cardsLocal) {
+            this._cards = new Map(Object.entries(cardsLocal));
+        } else {
+            this._cards = new Map([
+                ["cat", "кот"],
+                ["dog", "собака"],
+                ["sun", "солнце"],
+                ["ball", "мяч"],
+                ["apple", "яблоко"]
+            ]);
+        }
+    }
 
     get cards() {
         return this._cards;

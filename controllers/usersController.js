@@ -40,7 +40,6 @@ users.login = (req, res) => {
                 //hideError();
                 res.redirect(`/game.html#${login}`);
             } else {
-                // пользователь не найден
                 // Kein User ist gefunden
                 //res.send("Name oder Passwort ist falsch.");
                 res.redirect(`/index.html?error=1`);
@@ -133,70 +132,3 @@ users.add = (req, res) => {
         }
     );
 };
-/*
-users.add = (req, res) => {
-    console.log("add");
-
-    const { name, email, password } = req.body;
-
-    // Проверка формата (похож ли email на настоящий). 
-    const validator = require('validator');
-
-
-    if (!validator.isEmail(email)) {
-        return res.status(400).json({
-            message: "Falsche E-Mail-Adresse"
-        });
-    }
-
-      // Проверяем, есть ли пользователь
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-        return res.status(400).json({
-        message: "Этот email уже зарегистрирован"
-        });
-    }
-
-    //const email = name + "@gmail.com";
-    const now = new Date();
-    // Преобразуем в формат MySQL DATETIME: "YYYY-MM-DD HH:MM:SS"
-    // In das MySQL-DATETIME-Format umwandeln: "YYYY-MM-DD HH:MM:SS"
-    const mysqlDate = now.toISOString().slice(0, 19).replace('T', ' ');
-
-    const sql = "INSERT INTO `users` (`name`, `email`, `password`, `created_at`) " +
-        "VALUES('" + name + "','" + email + "','" + password + "','" + mysqlDate + "')";
-
-
-    connection.query(
-        'SELECT * FROM users WHERE name = ?',
-        [name],
-        (error, results) => {
-            if (error) {
-                console.log(error);
-                res.status(500).send("Error");
-            } else {
-                if (results.length > 0) {
-                    // пользователь найден
-                    // User ist gefunden
-                    console.log("Diese nahme ist schon erstelt:", login);
-                    res.redirect(`/`);
-                } else {
-                    connection.query(sql, (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            res.status(500).send("Error");
-                        } else {
-                            if (results) {
-                                console.log(results);
-                            }
-                            res.redirect(`/game.html#${login}`);
-                        }
-                    });
-
-                }
-            }
-        });
-}
-
-*/

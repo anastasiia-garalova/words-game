@@ -11,6 +11,8 @@ class Tetris {
         //console.log("Менеджер карточек запущен / Karten-Manager gestartet");
 
         menuButton.addEventListener("click", () => {
+            this.stopGame();
+
             modalContainer.innerHTML = "";
             showMenu(); // Вызываем функцию showMenu / Rufen Sie die Funktion showMenu auf
         });
@@ -42,13 +44,16 @@ class Tetris {
         this._timeout = 500;
         this._counter = 0;
 
-
+        this._isStopped = false;
+        this._currentStop = null;
     }
 
     // Jeder Block wird vor einander setzen
     // Каждый блок появляется один за другим
     async startTetris(onEnd) {
         console.log("🎮 START TETRIS");
+
+        this._isStopped = false;
 
         let blocksTotalCount = this._rows * this._columns;
         let bgColorId = Math.floor(Math.random() * this._bgColorArray.length);
@@ -91,6 +96,12 @@ class Tetris {
             });
             // ждём пока блок упадёт
             const continueGame = await this.moveBlock(block, "down", color, wordID);
+
+            if (this._isStopped) {
+                console.log("🛑 Игра остановлена пользователем");
+                return;
+            }
+
             if (!continueGame) {
                 console.log("💀 CALLING onEnd(lose)");
                 onEnd("lose");
@@ -109,6 +120,17 @@ class Tetris {
             return;
         }
     }
+
+    stopGame() {
+    console.log("🛑 GAME STOPPED");
+
+    this._isStopped = true;
+
+    if (this._currentStop) {
+        this._currentStop();
+        this._currentStop = null;
+    }
+}
 
     createNewCardsArray() {
         let newCardsArray = [];
@@ -142,16 +164,6 @@ class Tetris {
         const tetrisTable = document.createElement("div");
         tetrisTable.id = "tetris-table";
 
-        // заполняем снизу вверх
-        /*        for (let row = 0; row >= 0; row--) {
-                    for (let col = 0; col < this._columns; col++) {
-                        const cell = document.createElement('div');
-                        cell.className = 'cell';
-                        cell.textContent = "row: " + row + "-" + "col: " + col;
-                        tetrisTable.appendChild(cell);
-                    }
-                }*/
-
         return tetrisTable;
     }
 
@@ -176,126 +188,121 @@ class Tetris {
 
         return grid;
     }
-/*
+
     moveBlock(block, direction = "down", color, wordID) {
         return new Promise(resolve => {
-            const blockHeight = 40; // высота блока в пикселях (нужно под твой CSS)
+
             let rowStart = parseInt(block.style.gridRow.split("/")[0]);
+            let height = 1;
             let col = parseInt(block.style.gridColumn);
-            let offset = 0; // смещение в пикселях внутри строки
-            let lastTime = performance.now();
 
-            const keyHandler = (event) => {
-                if (event.key === "ArrowLeft" && col > 1) col--;
-                if (event.key === "ArrowRight" && col < this._columns) col++;
-                if (event.key === "ArrowDown") offset += 5; // ускорение падения
-            };
+            let interval;
+            let finished = false;
 
-            document.addEventListener("keydown", keyHandler);
+            const finish = async (continueGame) => {
+                if (finished) return;
 
-            const animate = (time) => {
-                const delta = time - lastTime;
-                lastTime = time;
+                finished = true;
 
-                // вычисляем, сколько пикселей пройти за этот кадр
-                offset += (blockHeight / this._timeout) * delta;
+                clearInterval(interval);
+                document.removeEventListener("keydown", keyHandler);
 
-                // проверка перехода на следующую строку
-                let newRow = rowStart + Math.floor(offset / blockHeight);
-
-                // проверка столкновения с низом или другим блоком
-                if (newRow > this._rows || (newRow > 2 && this._grid[newRow - 1][col - 1])) {
-                    document.removeEventListener("keydown", keyHandler);
-                    offset = (newRow - rowStart) * blockHeight; // корректируем смещение для визуального отображения
-                    block.style.transform = `translateY(${offset}px)`;
-                    // фиксируем блок в сетке
-                    this.checkup(color, wordID, newRow, col)
-                        .then((continueGame) => {
-                            resolve(continueGame);
-                        });
-                    return;
+                if (this._currentStop === stopFromOutside) {
+                    this._currentStop = null;
                 }
 
-                // обновляем позицию блока визуально
-                console.log("offset: ", offset);
-                block.style.transform = `translateY(${offset}px)`;
-                block.style.gridColumn = `${col}`;
-
-                requestAnimationFrame(animate);
+                resolve(continueGame);
             };
 
-            requestAnimationFrame(animate);
-        });
-    }
+            const stopFromOutside = () => {
+                console.log("🛑 Игра остановлена кнопкой назад");
 
-*/
+                clearInterval(interval);
+                document.removeEventListener("keydown", keyHandler);
 
+                if (!finished) {
+                    finished = true;
+                    resolve(false);
+                }
 
-    moveBlock(block, direction = "down", color, wordID) {
-        return new Promise(resolve => {
+                this._currentStop = null;
+            };
 
-            // if (direction === "down") {
+            this._currentStop = stopFromOutside;
 
-            // Nahmen Positions Daten von Block Element: rowStart, col
-            let rowStart = parseInt(block.style.gridRow.split("/")[0]);
-            //let rowEnd = parseInt(block.style.gridRow.split("/")[1]);
-            let height = 1
-            let col = parseInt(block.style.gridColumn);
-
-            // Move <- or ->
             const keyHandler = (event) => {
+
+                if (this._isStopped) return;
+
                 if (event.key === "ArrowLeft" && col > 1) {
                     col--;
-                } else if (event.key === "ArrowRight" && col < this._columns) {
+                } 
+                else if (event.key === "ArrowRight" && col < this._columns) {
                     col++;
-                } else if (event.key === "ArrowDown" && rowStart > 2) {
+                } 
+                else if (event.key === "ArrowDown" && rowStart > 2) {
                     startInterval(this._timeout / 2);
                 }
             };
 
             document.addEventListener("keydown", keyHandler);
 
-            let interval;
-
             const stop = async () => {
+                if (finished) return;
+
                 console.log("🛑 STOP", rowStart, col);
 
                 clearInterval(interval);
                 document.removeEventListener("keydown", keyHandler);
 
-                const continueGame = await this.checkup(color, wordID, rowStart, col);
+                this._currentStop = null;
+
+                const continueGame = await this.checkup(
+                    color,
+                    wordID,
+                    rowStart,
+                    col
+                );
+
                 console.log("🛑 CHECKUP RESULT:", continueGame);
 
-                resolve(continueGame);
+                if (!finished) {
+                    finished = true;
+                    resolve(continueGame);
+                }
             };
 
             const startInterval = (speed) => {
 
                 clearInterval(interval);
-                // Стрелочная функция не теряет this
-                interval = setInterval( ()=> {
 
-                    // Wenn Block bis ende Tabele oder ander Block gegangen ist, loeschen wir unser Interval und  EventListener
-                    if (rowStart > this._rows ||
-                        (rowStart > 2 && this._grid[rowStart - 1][col - 1])
-                    ) {    // End Blocks Position
+                interval = setInterval(() => {
+
+                    if (this._isStopped) {
+                        stopFromOutside();
+                        return;
+                    }
+
+                    if (
+                        rowStart > this._rows ||
+                        (rowStart > 2 &&
+                        this._grid[rowStart - 1][col - 1])
+                    ) {
                         stop();
                         return;
                     }
 
                     block.style.gridColumn = `${col}`;
-                    block.style.gridRow = `${rowStart}/${rowStart + height}`;
-                    console.log("-------------------------")
+                    block.style.gridRow =
+                        `${rowStart}/${rowStart + height}`;
 
                     rowStart++;
 
                 }, speed);
-            }
+            };
 
             startInterval(this._timeout);
-            // }
-        })
-
+        });
     }
 
 
@@ -346,7 +353,6 @@ class Tetris {
         }
     }
 
-
     async checkup(color, wordID, rowStart, col) {
         const row = rowStart - 2;
         const colIndex = col - 1;
@@ -373,117 +379,6 @@ class Tetris {
             return true; // игра продолжается
         }
     }
-
-
-    /*   checkup(color, wordID, rowStart, col) {
-
-           const rowIndex = rowStart - 2;
-           const colIndex = col - 1;
-
-           let arr = [];
-           let word = this._newCardsArray[color][wordID];
-
-           arr[color] = new Array(2);
-           arr[color][wordID] = word;
-           this._grid[rowIndex][colIndex] = arr;
-
-           let key;
-           let keyLinks;
-           let keyRights;
-           let keyBottom;
-
-           let cell  = this._grid[rowIndex][colIndex];
-           if (cell) {
-               key = Object.keys(cell)[0];  // безопасно
-               //console.log("key: ",key);
-           }
-
-           if (colIndex > 0) {
-               let cellLinks = this._grid[rowIndex][colIndex -1];
-               if (cellLinks) {
-                   [keyLinks] = Object.keys(cellLinks);
-                   //console.log("keyLinks: ",keyLinks);
-               }
-           }
-
-           if (colIndex < 2) {
-               let cellRights = this._grid[rowIndex][colIndex +1];
-               if (cellRights) {
-                   [keyRights] = Object.keys(cellRights);
-                   //console.log("keyRehts: ",keyRehts);
-               }
-           }
-
-           if (rowIndex < this._rows - 1) {
-               let cellBottom = this._grid[rowIndex + 1][colIndex];
-               if (cellBottom) {
-                   [keyBottom] = Object.keys(cellBottom);
-                   //console.log("keyBottom: ",keyBottom);
-               }
-           }
-
-           this.deleteBlock(key, keyBottom, keyLinks, keyRights, rowStart, col);
-       }*/
-
-    /*    deleteBlock(key, keyBottom, keyLinks, keyRights, rowStart, col) {
-            const rowIndex = rowStart - 2;
-            const colIndex = col - 1;
-
-            if(key === keyBottom || key === keyLinks || key === keyRights) {
-                if (key === keyBottom) {
-                    console.log("key === keyBottom: ",key)
-
-                    const el1 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart - 1} / ${col} / ${rowStart}"]`);
-                    const el2 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart} / ${col} / ${rowStart + 1}"]`);
-                    // console.log(`.block.${key}[style*="grid-area: 15 / 3 / 16`)
-                    if (el1 && el2) {
-                        el1.remove();
-                        el2.remove();
-                        console.log(this._grid)
-
-                        this._grid[rowIndex][colIndex] = null;
-                        this._grid[rowIndex + 1][colIndex] = null;
-                    }
-                } else if (key === keyRights) {
-                    console.log("keyRehts: ",keyRights);
-                    const el1 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart - 1} / ${col} / ${rowStart}"]`);
-                    const el2 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart - 1} / ${col + 1} / ${rowStart}"]`);
-
-                    if (el1 && el2) {
-                        el1.remove();
-                        el2.remove();
-                        console.log(this._grid)
-
-                        this._grid[rowIndex][colIndex] = null;
-                        this._grid[rowIndex][colIndex + 1] = null;
-
-                        console.log("rowIndex -1: ",rowIndex - 1, "colIndex: ", colIndex + 1);
-                        if (this._grid[rowIndex - 1][colIndex + 1]) {
-                            this.dropColumn(colIndex + 1)
-                            this.renderColumn(colIndex + 1);
-                        }
-                    }
-                }else if (key === keyLinks) {
-                    console.log("keyLinks: ",keyLinks);
-                    const el1 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart - 1} / ${col} / ${rowStart}"]`);
-                    const el2 = document.querySelector(`.block.${key}[style*="grid-area: ${rowStart - 1} / ${col - 1} / ${rowStart}"]`);
-
-                    if (el1 && el2) {
-                        el1.remove();
-                        el2.remove();
-                        console.log(this._grid)
-
-                        this._grid[rowIndex][colIndex] = null;
-                        this._grid[rowIndex][colIndex - 1] = null;
-
-                        if (this._grid[rowIndex - 1][colIndex - 1]) {
-                            this.dropColumn(colIndex - 1)
-                            this.renderColumn(colIndex - 1);
-                        }
-                    }
-                }
-            }
-        }*/
 
     async checkMatches(row, col) {
         const cell = this._grid[row][col];
@@ -521,8 +416,6 @@ class Tetris {
                 }
             }
         });
-
-
     }
 
 
