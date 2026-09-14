@@ -215,12 +215,6 @@ class NewWordsList {
         btnWordDelete.style.backgroundColor = "red";
         btnWorEdit.style.backgroundColor = "orange";
 
-
-/*        if ((Object.keys(this.listNewWords).length + 1) % 2)
-            wordTr.style.backgroundColor = "#F5FFFA";
-        else
-            wordTr.style.backgroundColor = "#FFFFE0";*/
-
         wordDeleteTd.appendChild(btnWordDelete);
         worEditTd.appendChild(btnWorEdit);
         wordTr.append(enWordTd, deWordTd, wordDeleteTd, worEditTd);
@@ -280,10 +274,9 @@ class NewWordsList {
         btnSave.style.display = "block";
         btnAdd.style.display = "none";
         btnPlay.style.display = "none"
-
-        // Убираем предыдущие обработчики кнопки Save
+        
         const newBtnSave = btnSave.cloneNode(true);
-        //Метод replaceChild у родителя заменяет один дочерний элемент другим:
+        
         //Die Methode replaceChild beim Elternelement ersetzt ein Kind-Element durch ein anderes.
         btnSave.parentNode.replaceChild(newBtnSave, btnSave);
 

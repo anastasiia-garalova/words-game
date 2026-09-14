@@ -7,20 +7,12 @@ let blinkInterval = {
 
 function showWindowWithCard(onEnd) {
 
-    let cardsMap = new Cards().cards;
+    const cardsMap = new Cards().cards;
     const cards = Object.fromEntries(cardsMap);
 
     const modalContainer = document.getElementsByClassName("modal")[0];
     modalContainer.innerHTML = "";
-        // ID NAME
     modalContainer.id = "cards-container";
-
-    // Setzen das Element "modalContainer" in "document body"
-    //document.body.appendChild(modalContainer);
-    //mainContainer.appendChild(modalContainer);
-
-    let hasIntersectedAny = false;       // пересечение с любым объектом
-    let hasIntersectedCorrect = false;   // пересечение с объектом с тем же id
 
     const usedAreas = [];
     let index = 0;
@@ -53,19 +45,15 @@ function showWindowWithCard(onEnd) {
         placeWithoutOverlap(cardDivEn, modalContainer, usedAreas);
         placeWithoutOverlap(cardDivDe, modalContainer, usedAreas);
 
-        //modalContainer.append(cardDivEn, cardDivDe);
-
         let offsetX, offsetY;
         let isDown = false;
         let sprache = "";
-        let hasIntersected = false;   // отслеживаем факт пересечения
 
         let allEnCards = [];
         let allDeCards = [];
         allEnCards.push(cardDivEn);
         allDeCards.push(cardDivDe);
 
-        // 1. Нажали мышь
         cardDivEn.addEventListener("mousedown", (e) => {
             isDown = true;
             sprache = "en";
@@ -82,7 +70,6 @@ function showWindowWithCard(onEnd) {
             }
         });
 
-        // 1. Нажали мышь
         cardDivDe.addEventListener("mousedown", (e) => {
             isDown = true;
             sprache = "de";
@@ -97,10 +84,8 @@ function showWindowWithCard(onEnd) {
                 clearInterval(blinkInterval.en);
                 blinkInterval.en = null;
             }
-
         });
 
-        // 2. Двигаем мышь
         document.addEventListener("mousemove", (e) => {
             if (!isDown) return;
 
@@ -110,11 +95,10 @@ function showWindowWithCard(onEnd) {
             activeCard.style.left = (e.clientX - offsetX) + "px";
             activeCard.style.top = (e.clientY - offsetY) + "px";
 
-            activeCard.currentTarget = null; // очищаем прошлое соприкосновение
+            activeCard.currentTarget = null;
 
             const activeRect = activeCard.getBoundingClientRect();
 
-            // проверяем пересечение с каждым элементом
             oppositeList.forEach(other => {
                 const otherRect = other.getBoundingClientRect();
 
@@ -125,11 +109,10 @@ function showWindowWithCard(onEnd) {
                     activeRect.bottom > otherRect.top;
 
                 if (isIntersecting) {
-                    // подсветка как в LearningApps
                     activeCard.style.border = "4px solid orange";
                     other.style.border = "4px solid orange";
 
-                    // сохраняем, кто именно соприкоснулся
+                    // Speichern, wer genau es berührt hat
                     activeCard.currentTarget = other;
                 } else {
                     other.style.border = "";
@@ -137,7 +120,6 @@ function showWindowWithCard(onEnd) {
             });
         });
 
-        // 3. Отпустили мышь
         document.addEventListener("mouseup", () => {
             if (!isDown) return;
             isDown = false;
@@ -146,30 +128,23 @@ function showWindowWithCard(onEnd) {
             let target = activeCard.currentTarget;
 
             if (target && activeCard.id === target.id) {
-                // Rihtige Paar loeschen /правильная пара → исчезают
-/*                activeCard.style.display = "none";
-                target.style.display = "none";*/
                 activeCard.remove();
                 target.remove();
                 cardCount -= 2;
 
-                console.log("cardCount: ", cardCount);
                 if (cardCount === 0) {
-                   // modalContainer.remove();
-
-                    //modalContainer.innerHTML = "";
-                    onEnd("win");   // <<< Rufen CALLBACK
+                    onEnd("win");   
                 }
             }
 
-            // очистка подсветок
             allEnCards.forEach(card => card.style.border = "");
             allDeCards.forEach(card => card.style.border = "");
         });
 
     }
 
-    // Positionieren ohne Überschneidungen (без пересечения)
+
+    // Positionieren ohne Überschneidungen
     function placeWithoutOverlap(element, container, usedAreas) {
         const containerRect = container.getBoundingClientRect();
         const elemWidth = element.offsetWidth;
@@ -198,7 +173,8 @@ function showWindowWithCard(onEnd) {
             attempts++;
         }
 
-        if (!fits) { // Wenn nicht genügend Platz vorhanden ist, platzieren wir es nach dem Zufallsprinzip.
+        // Wenn nicht genügend Platz vorhanden ist, platzieren wir es nach dem Zufallsprinzip
+        if (!fits) { 
             left = Math.random() * (containerRect.width - elemWidth);
             top = Math.random() * (containerRect.height - elemHeight);
         }

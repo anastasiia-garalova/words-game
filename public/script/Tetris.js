@@ -1,5 +1,4 @@
 import {Cards} from './Cards.js';
-//import * as console from "node:console";
 
 class Tetris {
 
@@ -8,7 +7,6 @@ class Tetris {
         const modalContainer = document.getElementsByClassName("modal")[0];
         const menuButton = document.getElementById("menu-button");
         menuButton.style.display = "block"; 
-        //console.log("Менеджер карточек запущен / Karten-Manager gestartet");
 
         menuButton.addEventListener("click", () => {
             this.stopGame();
@@ -28,9 +26,7 @@ class Tetris {
         this._bgColorArray = ["yellow", "orange", "green", "pink", "aqua"];
         // Cards Array mit Farben (Colors)
         this._newCardsArray = this.createNewCardsArray();
-        console.log("this._newCardsArray: ",this._newCardsArray);
         this._cloneCardsArray = this.createCloneCardArray();
-        console.log("this._cloneCardsArray: ", this._cloneCardsArray);
 
         this._columns = cols;
         this._rows = rows;
@@ -39,7 +35,6 @@ class Tetris {
 
         // Blocks Array mit Flag "null" oder "block"
         this._grid = this.createGrid();
-        console.log("this._grid: ", this._grid);
 
         this._timeout = 500;
         this._counter = 0;
@@ -49,9 +44,7 @@ class Tetris {
     }
 
     // Jeder Block wird vor einander setzen
-    // Каждый блок появляется один за другим
     async startTetris(onEnd) {
-        console.log("🎮 START TETRIS");
 
         this._isStopped = false;
 
@@ -61,7 +54,7 @@ class Tetris {
         let wordID = 0;
 
         for (let i = 0; i < blocksTotalCount; i++) {
-            // 🎉 ПОБЕДА
+            
             if (i > 0 && this.isGridEmpty()) {
                 onEnd("win");
                 return;
@@ -79,50 +72,34 @@ class Tetris {
             // Um gleiche color mit verschiedene Woerter war, wordID aendern
             if ( !this._cloneCardsArray[color][0] && !this._cloneCardsArray[color][1] ) {
                 this._cloneCardsArray[color] = {...this._newCardsArray[color]};
-                //console.log(this._cloneCardsArray)
-            } else if ( !this._cloneCardsArray[color][wordID] ) { // wenn id = 0 schon war, dann aendern auf 1
+            } else if ( !this._cloneCardsArray[color][wordID] ) {
                 wordID = wordID ? 0 : 1;
             }
+
             block.textContent = this._newCardsArray[color][wordID];
-            console.log("color:", color, "wordID: ", wordID, "this._cloneCardsArray: ", this._cloneCardsArray[color][wordID])
             this._cloneCardsArray[color][wordID] = null;
 
             this._tetrisTable.appendChild(block);
 
-            console.log("⬇️ BEFORE MOVE", {
-                i,
-                color,
-                wordID
-            });
-            // ждём пока блок упадёт
             const continueGame = await this.moveBlock(block, "down", color, wordID);
 
             if (this._isStopped) {
-                console.log("🛑 Игра остановлена пользователем");
                 return;
             }
 
             if (!continueGame) {
-                console.log("💀 CALLING onEnd(lose)");
                 onEnd("lose");
                 return;
             }
-
-            console.log("⬆️ AFTER MOVE", {
-                i,
-                continueGame
-            });
         }
 
         if (!this.isGridEmpty()) {
-            console.log("💀 CALLING onEnd(lose)");
             onEnd("lose");
             return;
         }
     }
 
     stopGame() {
-    console.log("🛑 GAME STOPPED");
 
     this._isStopped = true;
 
@@ -150,7 +127,9 @@ class Tetris {
     }
 
     createCloneCardArray() {
+
         const cloneCardsArray = {};
+
         for (let color in this._newCardsArray) {
             cloneCardsArray[color] = [...this._newCardsArray[color]]; // клонируем массив
         }
@@ -160,7 +139,6 @@ class Tetris {
 
     createTetrisPanel() {
 
-        // tetris Container
         const tetrisTable = document.createElement("div");
         tetrisTable.id = "tetris-table";
 
@@ -168,6 +146,7 @@ class Tetris {
     }
 
     createBlock(bgColorId) {
+
         const block = document.createElement('div');
         block.className = 'block ' + this._bgColorArray[bgColorId];
 
@@ -215,7 +194,6 @@ class Tetris {
             };
 
             const stopFromOutside = () => {
-                console.log("🛑 Игра остановлена кнопкой назад");
 
                 clearInterval(interval);
                 document.removeEventListener("keydown", keyHandler);
@@ -250,8 +228,6 @@ class Tetris {
             const stop = async () => {
                 if (finished) return;
 
-                console.log("🛑 STOP", rowStart, col);
-
                 clearInterval(interval);
                 document.removeEventListener("keydown", keyHandler);
 
@@ -263,8 +239,6 @@ class Tetris {
                     rowStart,
                     col
                 );
-
-                console.log("🛑 CHECKUP RESULT:", continueGame);
 
                 if (!finished) {
                     finished = true;
@@ -310,7 +284,6 @@ class Tetris {
 
         const height = this._grid.length;
 
-        // 1. Забираем все НЕ null элементы снизу вверх
         const values = [];
 
         for (let row = height - 1; row >= 0; row--) {
@@ -320,22 +293,22 @@ class Tetris {
             }
         }
 
-        // 2. Заполняем колонку снизу вверх
         for (let row = height - 1; row >= 0; row--) {
             this._grid[row][colIndex] = values.shift() ?? null;
         }
     }
 
+
     renderColumn(colIndex) {
+        
         const table = this._tetrisTable;
 
-        // Удаляем все блоки в колонке
         table.querySelectorAll('.block').forEach(block => {
             const col = parseInt(block.style.gridColumn);
             if (col === colIndex + 1) block.remove();
         });
 
-        // Перерисовываем колонку по _grid
+        // Zeichne die Spalte gemäß _grid neu
         for (let row = 0; row < this._rows; row++) {
             const cell = this._grid[row][colIndex];
             if (!cell) continue;
@@ -353,17 +326,11 @@ class Tetris {
         }
     }
 
+
     async checkup(color, wordID, rowStart, col) {
         const row = rowStart - 2;
         const colIndex = col - 1;
 
-            console.log("🔎 CHECKUP", {
-                rowStart,
-                row,
-                col,
-                color,
-                wordID
-            });
         if (row === 1) {
             return false;
         } else {
@@ -376,9 +343,10 @@ class Tetris {
             this._grid[row][colIndex] = cell;
 
             await this.checkMatches(row, colIndex);
-            return true; // игра продолжается
+            return true; 
         }
     }
+
 
     async checkMatches(row, col) {
         const cell = this._grid[row][col];
@@ -387,10 +355,8 @@ class Tetris {
         const color = Object.keys(cell)[0];
         const connected = this.findConnected(row, col, color);
 
-        // Условие совпадения (2+ или 3+)
         if (connected.length < 2) return;
 
-        // 1. Удаляем из grid и DOM сразу
         connected.forEach(({ row, col }) => {
             this._grid[row][col] = null;
 
@@ -401,14 +367,12 @@ class Tetris {
             if (el) el.remove();
         });
 
-        // 2. Роняем колонки
         const affectedCols = [...new Set(connected.map(c => c.col))];
         affectedCols.forEach(col => {
             this.dropColumn(col);
-            this.renderColumn(col); // синхронно
+            this.renderColumn(col); 
         });
 
-        // 3. Повторная проверка (цепочки)
         affectedCols.forEach(col => {
             for (let r = 0; r < this._rows; r++) {
                 if (this._grid[r][col]) {
@@ -417,7 +381,6 @@ class Tetris {
             }
         });
     }
-
 
 
     findConnected(row, col, color, visited = new Set()) {

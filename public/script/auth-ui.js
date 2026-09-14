@@ -11,8 +11,7 @@ function showError(message, formType = "login") {
 
     if (formType === "login") {
         loginForm.prepend(errorBox);
-    }  
-    else if (formType === "register") {
+    }  else if (formType === "register") {
         loginForm.style.display = "none";
         registerForm.style.display = "block";
         registerForm.prepend(errorBox);

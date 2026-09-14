@@ -4,16 +4,15 @@ export class GameEndScreen {
         this.onMenuClick = onMenuClick;
     }
 
-    win(gameName) {
-        return this.show("Du hast gewonnen! 🎉", "win", gameName);
+    win() {
+        this.show("Du hast gewonnen! 🎉", "win");
     }
 
-    lose(gameName) {
-        return this.show("Versuche es noch einmal", "lose", gameName);
+    lose() {
+        this.show("Versuche es noch einmal", "lose");
     }
 
-    show(text, state = "", gameName) {
-        let redirectTo = "";
+    show(text, state = "") {
         this.modalContainer.innerHTML = "";
 
         const overlay = document.createElement("div");
@@ -23,17 +22,18 @@ export class GameEndScreen {
         message.className = "game-end-message";
         message.textContent = text;
 
-        const buttonHauptMenu = document.createElement("button");
-        buttonHauptMenu.textContent = "Zum Hauptmenü";
+        const mainMenuButton = document.createElement("button");
+        mainMenuButton.textContent = "Zum Hauptmenü";
 
-        overlay.append(message, buttonHauptMenu);
+        overlay.append(message, mainMenuButton);
         this.modalContainer.appendChild(overlay);
 
-        // Переход в меню
-        buttonHauptMenu.addEventListener("click", this.showHauptMenu.bind(this));
+        mainMenuButton.addEventListener("click", () => {
+            this.showMainMenu();
+        });
     }
 
-    showHauptMenu() {
+    showMainMenu() {
         this.modalContainer.innerHTML = "";
         this.onMenuClick();
     }

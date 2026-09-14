@@ -59,15 +59,12 @@ class TaskDescription {
 
         // INHALT VON AUFGABE
         this.aufgabeTitle.textContent = "Möchten Sie jetzt spielen?";
-        //this.aufgabeDescription.textContent = "Möchten Sie jetzt spielen";
         this.buttonPlayGame1.textContent = "Game 1";
         this.buttonPlayTetris.textContent = "Tetris";
-        //this.newWordsADD.textContent = "Neue woerter hinzufuegen";
         this.newWordsADD.textContent = "Eigene Wörter lernen";
         this.newWordsADD.style.backgroundColor = "orange";
 
         // Setzen alle Elementen im Conteiner AUFGABE "aufgabemodalContainer"
-        //this.taskContent.append(this.aufgabeTitle, this.aufgabeDescription, this.buttonPlayGame1);
         this.taskContent.append(this.aufgabeTitle, this.buttonPlayGame1, this.buttonPlayTetris, this.newWordsADD);
         // Setzen das Element AUFGABE im Conteiner FENSTER "aufgabeModal"
         this.taskContainer.appendChild(this.taskContent);
@@ -78,9 +75,6 @@ class TaskDescription {
 
     changeWindow(newWindow) {
         // DISABLED .modal-content
-/*        this.taskContent.style.display = "none";
-        this.taskContainer.style.display = "none";*/
-        //this.taskContent.remove();
         this.taskContainer.remove();
 
         // callback

@@ -27,21 +27,18 @@ users.login = (req, res) => {
             res.status(500).send("Error");
         } else {
             if (results.length > 0) {
-                // пользователь найден
+
                 // User ist gefunden
                 console.log("Name:", login);
 
-                // Сохраняем пользователя в сессии
                 req.session.user = {
                     id: results[0].id,
                     name: results[0].name
                 };
 
-                //hideError();
                 res.redirect(`/game.html#${login}`);
             } else {
                 // Kein User ist gefunden
-                //res.send("Name oder Passwort ist falsch.");
                 res.redirect(`/index.html?error=1`);
             }
         }
@@ -56,37 +53,21 @@ users.logout = (req, res) => {
             console.log(error);
             return res.status(500).send("Error");
         }
-
         res.redirect("/index.html");
     });
 };
-
-/*
-
-1. Проверка формата (похож ли email на настоящий).
-2. Проверка, что email не занят в базе данных.
-3. Подтверждение email через письмо
-
-✅ Проверка сложности пароля (например, минимум 8 символов).
-✅ Хеширование паролей через bcrypt.
-
-✅ Связь карточек с user_id.
-✅ Пользователь видит только свои карточки.
-*/
 
 users.add = (req, res) => {
     console.log("add");
 
     const { name, email, password } = req.body;
 
-    // Проверка формата email
     if (!validator.isEmail(email)) {
         return res.status(400).json({
             message: "Falsche E-Mail-Adresse"
         });
     }
 
-    // Проверяем, существует ли email
     connection.query(
         'SELECT id FROM users WHERE email = ?',
         [email],
@@ -96,7 +77,6 @@ users.add = (req, res) => {
                 res.redirect(`/index.html?error=501`);
             }
 
-            // Email уже есть
             if (results.length > 0) {
                 res.redirect(`/index.html?error=2`);
                 return;
@@ -107,7 +87,6 @@ users.add = (req, res) => {
                 .slice(0, 19)
                 .replace('T', ' ');
 
-            // Добавляем пользователя
             const sql = `
                 INSERT INTO users 
                 (name, email, password, created_at)
